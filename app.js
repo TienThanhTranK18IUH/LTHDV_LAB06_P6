@@ -25,6 +25,14 @@ app.use(
 );
 
 //MIDDLEWARE
+// Middleware để đưa MSSV và Họ tên vào res.locals (có thể dùng trong EJS)
+app.use((req, res, next) => {
+  res.locals.studentId = process.env.STUDENT_ID || 'CHUA_CO_MSSV';
+  res.locals.studentName = process.env.STUDENT_NAME || 'CHUA_CO_TEN';
+  res.locals.currentUser = req.user || null; // nếu đã đăng nhập thì lấy user
+  next();
+});
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -38,7 +46,7 @@ passport.use(
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
       callbackURL:
-        "https://nodejs-authentication-system-l2pu.onrender.com/auth/google/callback",
+        "http://localhost:3000/auth/google/callback",
       scope: ["profile", "email"],
     },
     function (accessToken, refreshToken, profile, callback) {
